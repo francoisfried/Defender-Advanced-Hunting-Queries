@@ -1,73 +1,103 @@
-# Microsoft Defender Advanced Hunting KQL Scripts for Incident Response and Threat Hunting
+# Microsoft Defender Advanced Hunting KQL Scripts
 
 ## Overview
 
-This repository contains a collection of KQL (Kusto Query Language) scripts for **Microsoft Defender Advanced Hunting**. These scripts are designed to help security teams with **incident response** and **threat hunting**. Each script falls under one of several categories, based on common attack vectors or malicious activities, and can be customized to suit specific environments.
+This repository contains KQL (Kusto Query Language) scripts for **Microsoft Defender Advanced Hunting**, organized around the **MITRE ATT&CK** framework. Each script helps security teams detect, investigate, and respond to adversary behavior by focusing on specific techniques identified within the MITRE ATT&CK matrix.
 
-The goal is to provide actionable, easily modifiable scripts that enhance detection of threats, suspicious activities, and potential compromises.
+The **MITRE ATT&CK** framework provides a comprehensive matrix of **tactics** and **techniques** used by adversaries in cyber attacks. Understanding these techniques can enhance an organization's ability to defend against sophisticated threats by identifying potential vulnerabilities and implementing effective defenses.
 
 ---
 
-## Categories
+## Tactics and Techniques Overview
 
-The repository is organized into the following categories to help streamline the process of incident response and threat hunting in Microsoft Defender Advanced Hunting. Each category contains KQL scripts targeting specific activities or attack vectors.
+Below is a summary of the **MITRE ATT&CK tactics** and the number of techniques associated with each. These tactics represent stages in an adversary’s attack lifecycle, and the techniques describe specific methods adversaries use to achieve their objectives.
 
-### 1. **Malware Detection**
-Queries to help identify the presence of malware, suspicious file executions, and other indicators of malicious software across endpoints.
+| **Tactic**               | **Number of Techniques** |
+|--------------------------|--------------------------|
+| **Reconnaissance**        | 10                       |
+| **Resource Development**  | 8                        |
+| **Initial Access**        | 10                       |
+| **Execution**             | 14                       |
+| **Persistence**           | 20                       |
+| **Privilege Escalation**   | 14                       |
+| **Defense Evasion**       | 43                       |
+| **Credential Access**     | 17                       |
+| **Discovery**             | 32                       |
+| **Lateral Movement**      | 9                        |
+| **Collection**            | 17                       |
+| **Command and Control**   | 18                       |
+| **Exfiltration**          | 9                        |
+| **Impact**                | 14                       |
 
-### 2. **Suspicious Network Activity**
-These scripts are designed to monitor and detect unusual or malicious network traffic, including scans, exfiltration, or command-and-control activity.
+This structure is crucial for organizing defensive strategies and **threat detection** methodologies. By aligning detection and hunting queries with specific techniques, this repository helps security teams stay ahead of adversaries.
 
-### 3. **Privilege Escalation**
-Queries focused on detecting attempts by attackers to escalate their privileges within the environment, whether through new account creation, misuse of administrative privileges, or other techniques.
+---
 
-### 4. **Lateral Movement**
-Scripts to detect adversaries moving across the network, typically using protocols like RDP, SMB, or PsExec, and techniques like WMI or remote service creation.
+## Repository Structure
 
-### 5. **Persistence Mechanisms**
-Queries targeting persistence techniques attackers might use to maintain their foothold in compromised systems, such as scheduled tasks, registry modifications, or service creation.
+The scripts in this repository are categorized by the MITRE ATT&CK tactics. Under each tactic, you’ll find KQL scripts that help detect specific techniques employed by attackers. Below is a brief description of each tactic:
+
+### 1. **Reconnaissance**
+Techniques adversaries use to gather information before gaining access to your network. Detection here focuses on **pre-access activities** such as scanning or collecting information from publicly available sources.
+
+### 2. **Resource Development**
+Techniques adversaries use to establish, compromise, or build resources they need to conduct operations. Detection scripts here identify **malicious infrastructure setup** or use of compromised credentials.
+
+### 3. **Initial Access**
+Techniques used by adversaries to gain entry into your network. These scripts focus on detecting attacks like **phishing, exploiting public-facing applications**, and other methods of initial compromise.
+
+### 4. **Execution**
+These techniques involve the execution of malicious code or commands. Detection queries focus on **malicious scripts, PowerShell commands**, or the misuse of legitimate tools.
+
+### 5. **Persistence**
+Techniques adversaries use to maintain their access to systems across reboots, changed credentials, or other interruptions. **Registry modifications, scheduled tasks**, and other persistence techniques are covered here.
+
+### 6. **Privilege Escalation**
+Techniques used to gain higher-level permissions or privileges on the system. These include **exploiting vulnerabilities**, abusing trusted system functions, or using stolen credentials to elevate privileges.
+
+### 7. **Defense Evasion**
+Techniques used to avoid detection or bypass security controls. This is the largest tactic category with **43 techniques**, covering methods like **obfuscation, disabling security tools**, and manipulating logs.
+
+### 8. **Credential Access**
+Techniques for stealing credentials like **passwords, tokens**, or other authentication information. This category includes scripts that detect tools or actions aimed at harvesting credentials.
+
+### 9. **Discovery**
+Techniques used to gain knowledge about the target environment, such as discovering **network topology, user accounts, and system services**. Detection queries in this category help spot abnormal **scanning or enumeration** activities.
+
+### 10. **Lateral Movement**
+Techniques used to move through a network from one system to another. Detection of **RDP, SMB abuse**, or the use of legitimate admin tools for lateral movement is covered here.
+
+### 11. **Collection**
+Techniques for gathering data of interest from a compromised environment. Scripts in this category identify activities like **data staging, screen capturing**, and the collection of sensitive files.
+
+### 12. **Command and Control (C2)**
+Techniques adversaries use to communicate with and control compromised systems. Detection of **malicious network traffic, web shells**, or suspicious **communication protocols** is key here.
+
+### 13. **Exfiltration**
+Techniques used to steal data from your environment. Detection of **data being exfiltrated over different channels** or through C2 communication is critical in this category.
+
+### 14. **Impact**
+Techniques aimed at **disrupting or destroying systems and data**, such as ransomware deployment, system wiping, or encryption for impact. Detection here focuses on **data destruction, service manipulation**, and other destructive actions.
 
 ---
 
 ## How to Use
 
-Each script comes with comments indicating which part of the query can be customized to fit your specific environment or investigation needs. **To use these queries**:
+Each KQL script is aligned with a specific **MITRE ATT&CK technique** and can be run directly within **Microsoft Defender Advanced Hunting**. Follow these steps to use the scripts:
 
-1. Go to Microsoft Defender's Advanced Hunting interface.
-2. Copy and paste the desired KQL script into the query editor.
-3. Modify the customizable parts (such as file hashes, IP addresses, or directory paths) based on the investigation or your organizational setup.
-4. Run the query and analyze the results.
-
-For each category, you'll find different scripts tailored for different hunting or response scenarios. Modify the queries as necessary to align them with your specific network, systems, or threat profiles.
+1. **Navigate to the relevant tactic**: Choose the folder that aligns with the MITRE ATT&CK tactic you are investigating or defending against.
+2. **Select the appropriate script**: Select the KQL script associated with the technique you want to detect.
+3. **Customize the script**: Modify the provided comments to tailor the script for your environment, such as IP ranges, file paths, or specific threats you're targeting.
+4. **Run the query**: Copy the KQL script into the Microsoft Defender Advanced Hunting interface and run the query to gather relevant data.
 
 ---
 
-## Customization Notes
-
-Throughout the scripts, you'll find **comment lines** explaining what to customize. These usually relate to:
-- **File hashes**: Replace with known malicious hashes you're investigating.
-- **IP addresses**: Replace with suspicious or malicious IPs relevant to your environment.
-- **Directory paths**: Customize based on folder structures commonly used in your organization.
-- **Process names/commands**: Modify to match the specific behavior you're targeting (e.g., PowerShell commands or PsExec usage).
-
----
-
-## Contributing
-
-We welcome contributions! If you have additional KQL scripts or enhancements to the existing ones, feel free to submit a pull request.
-
-- **Fork** the repository
-- **Create** a new branch for your changes
-- **Submit** a pull request with a clear description of what you are adding or modifying
+## Citations
+The MITRE ATT&CK framework is a powerful tool for organizing cybersecurity defenses and understanding adversarial behavior. For more details, visit the official MITRE ATT&CK website:
+[MITRE ATT&CK](https://attack.mitre.org)
 
 ---
 
 ## License
 
-This repository is licensed under the MIT License. Feel free to use, modify, and share as needed, but please give credit to this repository where applicable.
-
----
-
-## Acknowledgements
-
-Thanks to the broader security community and open-source contributors who continue to improve and share methods for defending against threats.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
