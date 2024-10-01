@@ -87,8 +87,8 @@ Each KQL script is aligned with a specific **MITRE ATT&CK technique** and can be
 
 1. **Navigate to the relevant tactic**: Choose the folder that aligns with the MITRE ATT&CK tactic you are investigating or defending against.
 2. **Select the appropriate script**: Select the KQL script associated with the technique you want to detect.
-3. **Customize the script**: Modify the provided comments to tailor the script for your environment, such as IP ranges, file paths, or specific threats you're targeting.
-4. **Run the query**: Copy the KQL script into the Microsoft Defender Advanced Hunting interface and run the query to gather relevant data.
+3. **Customize the script**: Modify the script for your environment, such as IP ranges, file paths, or specific threats you're targeting. Refer to the comment lines for guidance on which portions to edit.
+4. **Run the query**: Paste the KQL script into the Microsoft Defender Advanced Hunting interface and run the query to gather relevant data.
 
 ---
 
