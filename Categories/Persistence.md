@@ -1,4 +1,4 @@
-# Persistence Mechanisms
+# Persistence
 
 ## Notes:
 - Each script includes a comment on which part should be customized, such as file hashes, IPs, or specific system directories, to suit your organization's environment.
