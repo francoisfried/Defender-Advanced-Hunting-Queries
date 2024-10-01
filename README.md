@@ -93,8 +93,16 @@ Each KQL script is aligned with a specific **MITRE ATT&CK technique** and can be
 ---
 
 ## Citations
-The MITRE ATT&CK framework is a powerful tool for organizing cybersecurity defenses and understanding adversarial behavior. For more details, visit the official MITRE ATT&CK website:
-[MITRE ATT&CK](https://attack.mitre.org)
+
+This repository utilizes both the **Microsoft Defender Advanced Hunting** feature and the **MITRE ATT&CK®** framework to structure and enhance detection of adversarial tactics, techniques, and procedures (TTPs). Below are the citations and brief descriptions of both resources:
+
+- **Microsoft Defender for Endpoint - Advanced Hunting**  
+  Microsoft Defender Advanced Hunting is a query-based threat-hunting tool available within Microsoft Defender for Endpoint. It allows security teams to proactively investigate and detect threats across endpoints using Kusto Query Language (KQL). Advanced Hunting provides visibility into endpoint data and network events, enabling rapid detection and response.  
+  Available: [https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/advanced-hunting-overview](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/advanced-hunting-overview)
+
+- **MITRE ATT&CK®**  
+  MITRE ATT&CK is a globally-accessible knowledge base of adversarial tactics, techniques, and procedures based on real-world observations. It is widely used by cybersecurity professionals to model threats, assess security postures, and develop detection strategies. The ATT&CK framework helps organizations understand and respond to the full spectrum of cyberattacks.  
+  Available: [https://attack.mitre.org](https://attack.mitre.org)
 
 ---
 
