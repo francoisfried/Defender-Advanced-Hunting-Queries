@@ -8,7 +8,8 @@
 
 1. **Detect unusual outbound traffic**
    ```kql
-   // Replace RemoteIP with IPs or ranges that are considered suspicious for your environment
+   // This query identifies outbound traffic to public IPs on non-standard ports (above 1024). 
+   // Adjust RemotePort or RemoteIPType based on your organization's network behavior.
    DeviceNetworkEvents
    | where RemoteIPType == "Public" and RemotePort > 1024
    | summarize count() by RemoteIP
