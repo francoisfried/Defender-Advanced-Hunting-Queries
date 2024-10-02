@@ -15,13 +15,14 @@
    | project Timestamp, DeviceName, FolderPath, FileName, FileSize
    ```
 
-2. **Detect large file transfers via SMB**
+2. **Detect large file transfers via Network Shares**
    ```kql
    // Adjust the file size threshold to fit your organization’s definition of "large files"
-   DeviceNetworkEvents
-   | where ActionType == "FileAccessed" and RemotePort == 445
+   DeviceFileEvents
+   | where ActionType == "FileCreated" or ActionType == "FileModified"  // Track file creation or modification
+   | where FolderPath startswith "\\\\"                                // Look for file access over network shares
    | where FileSize > 100000000  // Threshold set to 100 MB
-   | project Timestamp, DeviceName, RemoteIP, FileName, FileSize
+   | project Timestamp, DeviceName, FileName, FolderPath, FileSize
    ```
 
 3. **Detect screen capture activity**
