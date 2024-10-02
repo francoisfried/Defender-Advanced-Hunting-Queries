@@ -11,8 +11,9 @@
    // Customize threshold (e.g., >5) for login failures based on your security policy
    DeviceNetworkEvents
    | where ActionType == "FailedLogin"
-   | summarize count() by AccountName, RemoteIP
-   | where count_ > 5
+   | summarize FailedAttempts = count(), LastAttempt = max(Timestamp) by InitiatingProcessAccountName, RemoteIP
+   | where FailedAttempts > 5
+   | project LastAttempt, InitiatingProcessAccountName, RemoteIP, FailedAttempts
    ```
 
 2. **Detect network scanning activity**
