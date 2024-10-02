@@ -31,3 +31,22 @@
    | where RemotePort == 53 and not (RemoteIP contains ".com" or RemoteIP contains ".org")
    | project DeviceName, RemoteIP, Timestamp
    ```
+
+4. **Detect potential DNS tunneling activity**
+   ```kql
+   // Adjust the threshold and domain TLDs based on your organization's network behavior
+   DnsEvents
+   | where QueryType == "A"  // Filter for standard A (IPv4) DNS queries
+   | where (Name endswith ".net" or Name endswith ".info" or Name endswith ".xyz")  // Adjust TLDs as necessary
+   | summarize count() by ClientIP, Name
+   | where count_ > 100  // DNS tunneling often generates a high volume of requests
+   | project ClientIP, Name, count_
+   ```
+
+5. **Detect external connections to non-standard ports**
+   ```kql
+   // Replace RemoteIPType and adjust port range if necessary
+   DeviceNetworkEvents
+   | where RemoteIPType == "Public" and (RemotePort < 1024 or RemotePort > 65535)
+   | project Timestamp, DeviceName, RemoteIP, RemotePort, ActionType
+   ```
