@@ -13,12 +13,3 @@
    | where ProcessCommandLine contains "wmic"
    | project DeviceName, ProcessCommandLine, Timestamp
    ```
-
-2. **Identify unsigned executables running from system folders**
-   ```kql
-   // Adjust folder paths to include other system folders if applicable in your environment
-   DeviceFileEvents
-   | where FolderPath contains "C:\\Windows" and FileName endswith ".exe"
-   | where isnotempty(Signer) == false
-   | project DeviceName, FileName, FolderPath, Timestamp
-   ```
