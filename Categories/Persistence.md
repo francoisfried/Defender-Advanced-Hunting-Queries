@@ -10,8 +10,8 @@
    ```kql
    // Adjust the registry key paths to match other areas of interest (e.g., software persistence locations)
    DeviceRegistryEvents
-   | where RegistryKeyPath endswith "Run"
-   | project DeviceName, RegistryKeyPath, RegistryValueName, Timestamp
+   | where InitiatingProcessFolderPath endswith "Run"
+   | project DeviceName, InitiatingProcessFolderPath, RegistryValueName, Timestamp
    ```
 
 2. **Identify new services**
