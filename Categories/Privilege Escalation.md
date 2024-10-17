@@ -18,7 +18,7 @@
    ```kql
    // Adjust "Administrators" group if you have other privileged groups
    IdentityInfo
-   | where IdentityType == "User" and AccountDomain == "Administrators"
+   | where Type == "User" and AccountDomain == "Administrators"
    | project AccountName, Timestamp
    ```
 
@@ -32,10 +32,14 @@
 
 4. **Detect abnormal group membership changes**
    ```kql
-   // Change the "Administrators" group based on other groups being monitored in your organization
-   IdentityInfo
-   | where AccountDomain == "Administrators" and ActionType == "GroupAdded"
-   | project AccountName, Timestamp
+   // Detect users added to the "Administrators" group
+   DeviceEvents
+   | where ActionType == "UserAddedToGroup"
+   | extend ParsedFields = parse_json(AdditionalFields)
+   | extend GroupName = tostring(ParsedFields.TargetGroupName)
+   | where GroupName == "Administrators"
+   | project Timestamp, AccountName, InitiatingProcessAccountName, GroupName
+   | order by Timestamp desc
    ```
 
 5. **Detect use of privileged service accounts**
