@@ -135,7 +135,7 @@ Adds new columns or calculates new values based on existing data.
 **Example:**
 
 ```kql
-| extend FileExtension = split(FileName, ".")[1]
+| extend FileExtension = split(FileName, ".")
 ```
 
 This creates a new column `FileExtension` by splitting `FileName` on the dot character.
