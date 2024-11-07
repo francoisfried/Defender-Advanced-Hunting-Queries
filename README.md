@@ -1,8 +1,8 @@
-# Microsoft Defender Advanced Hunting KQL Scripts
+# Microsoft Defender Advanced Hunting KQL Queries
 
 ## Overview
 
-This repository contains KQL (Kusto Query Language) scripts for **Microsoft Defender Advanced Hunting**, organized around the **MITRE ATT&CK** framework. Each script helps security teams detect, investigate, and respond to adversary behavior by focusing on specific techniques identified within the MITRE ATT&CK matrix.
+This repository contains KQL (Kusto Query Language) queries for **Microsoft Defender Advanced Hunting**, organized around the **MITRE ATT&CK** framework. Each query helps security teams detect, investigate, and respond to adversary behavior by focusing on specific techniques identified within the MITRE ATT&CK matrix.
 
 The **MITRE ATT&CK** framework provides a comprehensive matrix of **tactics** and **techniques** used by adversaries in cyber attacks. Understanding these techniques can enhance an organization's ability to defend against sophisticated threats by identifying potential vulnerabilities and implementing effective defenses.
 
@@ -35,19 +35,19 @@ This structure is crucial for organizing defensive strategies and **threat detec
 
 ## Repository Structure
 
-The scripts in this repository are categorized by the MITRE ATT&CK tactics. Under each tactic, you’ll find KQL scripts that help detect specific techniques employed by attackers. Below is a brief description of each tactic:
+The queries in this repository are categorized by the MITRE ATT&CK tactics. Under each tactic, you’ll find KQL queries that help detect specific techniques employed by attackers. Below is a brief description of each tactic:
 
 ### 1. **Reconnaissance**
 Techniques adversaries use to gather information before gaining access to your network. Detection here focuses on **pre-access activities** such as scanning or collecting information from publicly available sources.
 
 ### 2. **Resource Development**
-Techniques adversaries use to establish, compromise, or build resources they need to conduct operations. Detection scripts here identify **malicious infrastructure setup** or use of compromised credentials.
+Techniques adversaries use to establish, compromise, or build resources they need to conduct operations. Detection queries here identify **malicious infrastructure setup** or use of compromised credentials.
 
 ### 3. **Initial Access**
-Techniques used by adversaries to gain entry into your network. These scripts focus on detecting attacks like **phishing, exploiting public-facing applications**, and other methods of initial compromise.
+Techniques used by adversaries to gain entry into your network. These queries focus on detecting attacks like **phishing, exploiting public-facing applications**, and other methods of initial compromise.
 
 ### 4. **Execution**
-These techniques involve the execution of malicious code or commands. Detection queries focus on **malicious scripts, PowerShell commands**, or the misuse of legitimate tools.
+These techniques involve the execution of malicious code or commands. Detection queries focus on **malicious queries, PowerShell commands**, or the misuse of legitimate tools.
 
 ### 5. **Persistence**
 Techniques adversaries use to maintain their access to systems across reboots, changed credentials, or other interruptions. **Registry modifications, scheduled tasks**, and other persistence techniques are covered here.
@@ -59,7 +59,7 @@ Techniques used to gain higher-level permissions or privileges on the system. Th
 Techniques used to avoid detection or bypass security controls. This is the largest tactic category with **43 techniques**, covering methods like **obfuscation, disabling security tools**, and manipulating logs.
 
 ### 8. **Credential Access**
-Techniques for stealing credentials like **passwords, tokens**, or other authentication information. This category includes scripts that detect tools or actions aimed at harvesting credentials.
+Techniques for stealing credentials like **passwords, tokens**, or other authentication information. This category includes queries that detect tools or actions aimed at harvesting credentials.
 
 ### 9. **Discovery**
 Techniques used to gain knowledge about the target environment, such as discovering **network topology, user accounts, and system services**. Detection queries in this category help spot abnormal **scanning or enumeration** activities.
@@ -68,7 +68,7 @@ Techniques used to gain knowledge about the target environment, such as discover
 Techniques used to move through a network from one system to another. Detection of **RDP, SMB abuse**, or the use of legitimate admin tools for lateral movement is covered here.
 
 ### 11. **Collection**
-Techniques for gathering data of interest from a compromised environment. Scripts in this category identify activities like **data staging, screen capturing**, and the collection of sensitive files.
+Techniques for gathering data of interest from a compromised environment. queries in this category identify activities like **data staging, screen capturing**, and the collection of sensitive files.
 
 ### 12. **Command and Control (C2)**
 Techniques adversaries use to communicate with and control compromised systems. Detection of **malicious network traffic, web shells**, or suspicious **communication protocols** is key here.
@@ -83,12 +83,12 @@ Techniques aimed at **disrupting or destroying systems and data**, such as ranso
 
 ## How to Use
 
-Each KQL script is aligned with a specific **MITRE ATT&CK technique** and can be run directly within **Microsoft Defender Advanced Hunting**. Follow these steps to use the scripts:
+Each KQL query is aligned with a specific **MITRE ATT&CK technique** and can be run directly within **Microsoft Defender Advanced Hunting**. Follow these steps to use the queries:
 
 1. **Navigate to the relevant tactic**: Choose the folder that aligns with the MITRE ATT&CK tactic you are investigating or defending against.
-2. **Select the appropriate script**: Select the KQL script associated with the technique you want to detect.
-3. **Customize the script**: Modify the script for your environment, such as IP ranges, file paths, or specific threats you're targeting. Refer to the comment lines for guidance on which portions to edit.
-4. **Run the query**: Paste the KQL script into the Microsoft Defender Advanced Hunting interface and run the query to gather relevant data.
+2. **Select the appropriate query**: Select the KQL query associated with the technique you want to detect.
+3. **Customize the query**: Modify the query for your environment, such as IP ranges, file paths, or specific threats you're targeting. Refer to the comment lines for guidance on which portions to edit.
+4. **Run the query**: Paste the KQL query into the Microsoft Defender Advanced Hunting interface and run the query to gather relevant data.
 
 ---
 
