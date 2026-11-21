@@ -10,15 +10,16 @@
    ```kql
    // Adjust the registry key paths to match other areas of interest (e.g., software persistence locations)
    DeviceRegistryEvents
-   | where InitiatingProcessFolderPath endswith "Run"
-   | project DeviceName, InitiatingProcessFolderPath, RegistryValueName, Timestamp
+   | where ActionType in~ ("RegistryValueSet", "RegistryKeyCreated")
+   | where RegistryKey endswith @"\CurrentVersion\Run" or RegistryKey endswith @"\CurrentVersion\RunOnce"
+   | project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
    ```
 
 2. **Identify new services**
    ```kql
    // Customize if attackers typically use different commands to create services
    DeviceProcessEvents
-   | where ProcessCommandLine contains "sc.exe create"
+   | where FileName =~ "sc.exe" and ProcessCommandLine has "create"
    | project DeviceName, ProcessCommandLine, Timestamp
    ```
 
@@ -26,7 +27,7 @@
    ```kql
    // Modify the search to include other command-line tools for task scheduling (e.g., PowerShell)
    DeviceProcessEvents
-   | where ProcessCommandLine contains "schtasks"
+   | where FileName =~ "schtasks.exe" and ProcessCommandLine contains "/create"
    | project DeviceName, ProcessCommandLine, Timestamp
    ```
 
@@ -34,14 +35,9 @@
    ```kql
    // Adjust folder paths based on known or suspected locations attackers might use for persistence
    DeviceFileEvents
-   | where FolderPath contains "Startup"
+   | where ActionType == "FileCreated"
+   | where FolderPath contains @"\Microsoft\Windows\Start Menu\Programs\Startup\"
    | project DeviceName, FileName, FolderPath, Timestamp
    ```
 
-5. **Detect DLL hijacking attempts**
-   ```kql
-   // Modify file paths and file types if you suspect DLL hijacking attempts in other directories
-   DeviceFileEvents
-   | where FileName endswith ".dll" and (FolderPath contains "Windows" or FolderPath contains "System32")
-   | project DeviceName, FileName, FolderPath, Timestamp
-   ```
+These are hunting leads, not proof of persistence. Review the affected value, task, service, or file and its creating process. Installers and administration tools commonly produce benign matches. The commands above do not cover every method of creating services or tasks.

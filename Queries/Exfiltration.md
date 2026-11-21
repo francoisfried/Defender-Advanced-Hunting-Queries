@@ -6,12 +6,13 @@
 
 ---
 
-1. **Unusual DNS requests**
+1. **Frequent DNS destination activity**
    ```kql
-   // Adjust RemotePort if looking at different DNS services; customize domain TLDs if necessary
+   // A network event on port 53 does not necessarily include the requested DNS name.
    DeviceNetworkEvents
-   | where RemotePort == 53 and not (RemoteIP contains ".com" or RemoteIP contains ".org")
-   | project DeviceName, RemoteIP, Timestamp
+   | where RemotePort == 53 and isnotempty(RemoteIP)
+   | summarize ConnectionCount = count() by DeviceName, RemoteIP, bin(Timestamp, 1h)
+   | where ConnectionCount > 100
    ```
 
 2. **Exfiltration Over C2 Channel**
@@ -21,8 +22,9 @@
 DeviceNetworkEvents
 | where ActionType == "ConnectionSuccess"
 | where InitiatingProcessFileName != "System"  // Exclude system processes; add more if necessary
-| where RemoteIPType == "Public"  // Filters for external IP addresses
-| summarize ConnectionCount = count() by 
+| where isnotempty(RemoteIP) and ipv4_is_private(RemoteIP) == false
+| where RemoteIP !in ("127.0.0.1", "0.0.0.0")
+| summarize ConnectionCount = count() by
     DeviceName, 
     InitiatingProcessFileName, 
     InitiatingProcessCommandLine, 
@@ -31,40 +33,26 @@ DeviceNetworkEvents
 | order by ConnectionCount desc
 ```
 
-```kql
-// Detect processes making a high number of HTTP POST requests to external IPs
-DeviceNetworkEvents
-| where ActionType == "HttpPost"
-| where RemoteIPType == "Public"
-| where InitiatingProcessFileName != "System"
-| summarize PostCount = count() by 
-    DeviceName, 
-    InitiatingProcessFileName, 
-    InitiatingProcessCommandLine, 
-    RemoteIP, 
-    RemoteUrl
-| where PostCount > 100  // Adjust this threshold based on normal activity
-| order by PostCount desc
-```
+`DeviceNetworkEvents` does not establish HTTP method or bytes uploaded. Correlate these connections with proxy or firewall logs before treating them as exfiltration. The public IP filter above covers IPv4; review IPv6 separately.
 
 3. **Exfiltration Over Web Service**
 
-This query looks for HTTP POST requests to popular cloud storage services, which may indicate data exfiltration via web services.
+This query looks for repeated connections to selected cloud storage services. Connections alone do not establish uploads.
 
 ```kql
-// Detect high number of HTTP POST requests to cloud storage services
+// Find repeated connections to cloud storage services
 DeviceNetworkEvents
-| where ActionType == "HttpPost"
+| where ActionType == "ConnectionSuccess" and isnotempty(RemoteUrl)
 | where InitiatingProcessFileName != "System"  // Exclude system processes; modify as needed
-| where RemoteUrl matches regex @"(dropbox\.com|drive\.google\.com|onedrive\.live\.com|box\.com|s3\.amazonaws\.com)"
-// Modify the regex above to include or exclude specific cloud services relevant to your environment
-| summarize PostCount = count() by 
+| where RemoteUrl contains "dropbox.com" or RemoteUrl contains "drive.google.com"
+    or RemoteUrl contains "onedrive.live.com" or RemoteUrl contains "box.com"
+| summarize ConnectionCount = count() by
     DeviceName, 
     InitiatingProcessFileName, 
     InitiatingProcessCommandLine, 
     RemoteUrl
-| where PostCount > 50  // Adjust based on typical usage in your organization
-| order by PostCount desc
+| where ConnectionCount > 50  // Adjust based on typical usage in your organization
+| order by ConnectionCount desc
 ```
 
 4. **Archive Collected Data**
@@ -77,7 +65,6 @@ DeviceFileEvents
 | where ActionType == "FileCreated"
 | where FileName endswith '.zip' or FileName endswith '.rar' or FileName endswith '.7z' or FileName endswith '.tar.gz'
 // Add or remove file extensions above to match archive formats used in your environment
-| where InitiatingProcessFileName !in~ ('explorer.exe', 'winrar.exe', '7z.exe', 'tar.exe')  // Exclude known archiving tools; add any others used legitimately
 | project Timestamp, 
     DeviceName, 
     InitiatingProcessFileName, 
@@ -87,21 +74,4 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-5. **Obfuscated Files or Information**
-
-This query searches for the use of encryption tools or commands, potentially indicating data encryption before exfiltration.
-
-```kql
-// Detect usage of encryption tools and commands
-DeviceProcessEvents
-| where ProcessCommandLine has_any ("gpg", "openssl", "certutil", "encrypt", "gpg.exe", "openssl.exe", "certutil.exe")
-// Modify the list above to include or exclude encryption tools and keywords relevant to your environment
-| project Timestamp, 
-    DeviceName, 
-    FileName, 
-    ProcessCommandLine, 
-    InitiatingProcessFileName, 
-    InitiatingProcessCommandLine
-| order by Timestamp desc
-
-```
+Archive creation is a staging lead, not proof of exfiltration. Review the archive contents and subsequent network activity. Backups and packaging are common benign causes.
