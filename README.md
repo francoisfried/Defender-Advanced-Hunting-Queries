@@ -83,7 +83,7 @@ Techniques aimed at **disrupting or destroying systems and data**, such as ranso
 
 ## How to Use
 
-Each KQL query is aligned with a specific **MITRE ATT&CK technique** and can be run directly within **Microsoft Defender Advanced Hunting**. Follow these steps to use the queries:
+The queries are grouped by **MITRE ATT&CK tactic**. They are hunting examples that require review and tuning before operational use; a result alone does not prove malicious activity. Some tactic files are currently empty. Follow these steps to use the available queries:
 
 1. **Navigate to the relevant tactic**: Choose the folder that aligns with the MITRE ATT&CK tactic you are investigating or defending against.
 2. **Select the appropriate query**: Select the KQL query associated with the technique you want to detect.
